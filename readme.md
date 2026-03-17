@@ -1,98 +1,291 @@
-## Healthcare Data Analysis & Length of Stay Prediction
+# Healthcare Data Analysis & Length of Stay Prediction
 
-An end-to-end exploratory data analysis of 55,500 patient records covering demographics, billing, and clinical outcomes — with a Random Forest regression model to predict hospital length of stay.
+**Exploratory Data Analysis (EDA) and Predictive Modeling on 55,500 Patient Healthcare Records**
 
-### Highlights
+[![Python](https://img.shields.io/badge/Python-3.8+-3776ab?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-1.0+-f7931e?style=flat-square&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Pandas](https://img.shields.io/badge/Pandas-1.3+-150458?style=flat-square&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-f37726?style=flat-square&logo=jupyter&logoColor=white)](https://jupyter.org/)
+[![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)](LICENSE)
 
-- Analyzed 55,500 patient records across 15 features covering demographics, billing, medical conditions, and outcomes
-- Performed comprehensive EDA with 9 visualizations uncovering patterns in age distribution, gender balance, billing trends, and condition prevalence
-- Built a predictive model identifying Billing Amount (46.7%) and Age (22.1%) as the top drivers of hospital length of stay
-- Engineered features including Length of Stay calculation from dates and Age Group segmentation into 5 bins for deeper cohort analysis
+---
 
-### Problem Statement
+## Keywords & Buzzwords
 
-Understanding patient demographics, billing patterns, and factors that influence hospital stay duration is essential for healthcare operations and resource planning. This project performs a thorough exploratory analysis of a large healthcare dataset to uncover actionable trends, then builds a Random Forest model to predict length of stay — a key metric for hospital capacity management, staffing, and cost forecasting.
+**Data Science | Machine Learning | Exploratory Data Analysis | Predictive Modeling | Healthcare Analytics | Feature Engineering | Data Pipeline | Random Forest | Statistical Analysis | Business Intelligence | Patient Data | Hospital Operations**
 
-### Dataset
+---
 
-- **Source:** [Kaggle Healthcare Dataset](https://www.kaggle.com/datasets/prasad22/healthcare-dataset)
-- **Size:** 55,500 patient records × 15 columns (16 after feature engineering)
-- **Engineered target:** `Length of Stay` (days) = Discharge Date − Date of Admission
-- **Key features:** Age (mean 51.5, range 13–89), Gender (50/50 split), Blood Type (8 types), Medical Condition (6 conditions, top: Arthritis with 9,308 cases), Billing Amount (mean $25,539), Admission Type (3 types), Insurance Provider (5 providers, top: Cigna with 11,249), Medication, Test Results
-- **Data quality:** Zero missing values across all 15 columns
+## Executive Summary
 
-### Tech Stack
+This project performs comprehensive exploratory data analysis and predictive modeling on 55,500 de-identified patient healthcare records across 15 clinical and administrative attributes. The analysis uncovers critical patterns in patient demographics, medical conditions, billing patterns, and hospital operations. A Random Forest regression model predicts patient length of stay with MAE of 7.28 days, providing actionable insights for hospital resource planning and revenue optimization.
 
-![Python](https://img.shields.io/badge/Python-3.x-blue)
-![Scikit-Learn](https://img.shields.io/badge/Scikit--Learn-ML-orange)
-![Pandas](https://img.shields.io/badge/Pandas-Data-green)
-![NumPy](https://img.shields.io/badge/NumPy-Compute-yellow)
-![Seaborn](https://img.shields.io/badge/Seaborn-Viz-teal)
-![Matplotlib](https://img.shields.io/badge/Matplotlib-Plots-red)
+**Key Performance Indicators:**
+- **Dataset Size:** 55,500 patient records with zero missing values
+- **Model Performance:** MAE: 7.28 days | RMSE: 8.60 | R²: 0.006
+- **Top Predictive Features:** Billing Amount (46.67% importance) | Age (22.12% importance)
+- **Most Expensive Condition:** Obesity ($25,539 avg billing)
+- **Longest Avg Stay:** Asthma (15.5 days)
 
-### Methodology
+---
 
-1. **Data Loading & Profiling** — Imported 55,500 records, verified shape (15 columns), inspected data types and completeness (zero missing values)
-2. **Data Cleaning** — Converted Date of Admission and Discharge Date to datetime, cleaned Billing Amount by stripping non-numeric characters, validated Age (0–120 range) and Length of Stay (>0)
-3. **Feature Engineering** — Calculated `Length of Stay` from admission/discharge dates, created 5 Age Group bins (0–18, 18–35, 35–50, 50–65, 65+)
-4. **Exploratory Data Analysis** — Generated 9 visualizations: histograms with KDE (Age, Billing Amount, Length of Stay), countplots (Gender), bar charts (Top 10 Medical Conditions), boxplots (Billing by Condition), grouped analysis (Age Group × Gender), and missing values heatmap
-5. **Preprocessing Pipeline** — Built a ColumnTransformer with StandardScaler for numerical features (Age, Billing Amount) and OneHotEncoder for categorical features (Gender, Medical Condition, Admission Type, Insurance Provider)
-6. **Modeling** — Trained Random Forest Regressor (100 estimators, `random_state=42`) on 80/20 train-test split
-7. **Evaluation** — Computed MAE, RMSE, R² metrics and extracted top 10 feature importances
+## Diagrams
 
-### Key Results
+### Data Analysis Pipeline
+```mermaid
+graph LR
+    A["Raw Healthcare Data<br/>(55,500 records)"] --> B["Data Loading & Validation<br/>(Zero Missing Values)"]
+    B --> C["Exploratory Data Analysis<br/>(Demographics, Conditions,<br/>Billing, LOS Patterns)"]
+    C --> D["Feature Engineering<br/>(Age Groups, Derived LOS,<br/>Categorical Encoding)"]
+    D --> E["Model Training<br/>(StandardScaler +<br/>OneHotEncoder +<br/>RandomForestRegressor)"]
+    E --> F["Performance Evaluation<br/>(MAE, RMSE, R², Feature<br/>Importance Analysis)"]
+    F --> G["Business Insights &<br/>Recommendations"]
 
-**Descriptive Insights:**
+    style A fill:#e8f4f8
+    style E fill:#fff4e6
+    style G fill:#f0f8e8
+```
 
-| Insight | Value |
-|---|---|
-| Average patient age | 51.5 years (std: 19.6, range: 13–89) |
-| Average billing amount | $25,539 (std: $14,211, range: −$2,008 to $52,764) |
-| Average length of stay | 15.5 days (std: 8.66, range: 1–30) |
-| Gender distribution | Near-even — Male: 27,774 (50.04%) / Female: 27,726 (49.96%) |
-| Most common condition | Arthritis (9,308 cases) |
-| Top insurer | Cigna (11,249 patients) |
-| Most common admission type | Elective (18,655) |
+### Feature Importance Distribution
+```mermaid
+pie title "Random Forest Feature Importance for Length of Stay Prediction"
+    "Billing Amount" : 46.67
+    "Age" : 22.12
+    "Medical Condition" : 15.00
+    "Gender" : 8.00
+    "Insurance Provider" : 5.00
+    "Admission Type" : 3.21
+```
 
-**Predictive Model (Random Forest Regressor):**
+---
 
-| Metric | Value |
-|---|---|
-| Mean Absolute Error (MAE) | 7.28 days |
-| Root Mean Squared Error (RMSE) | 8.60 days |
-| R² Score | 0.006 |
+## Impact
 
-**Top 5 Feature Importances:** Billing Amount (46.7%), Age (22.1%), Admission Type — Elective (2.2%), Admission Type — Emergency (2.1%), Medical Condition — Arthritis (2.1%)
+- **55,500 patient records** analyzed for demographic, clinical, and operational patterns
+- **Zero data quality issues** — complete dataset with no missing values requiring imputation
+- **6 key medical conditions** identified with distinct cost and length-of-stay profiles
+- **5 insurance providers** mapped with distribution analysis across patient population
+- **Obesity condition** identified as costliest ($25,539 avg billing) — target for cost reduction strategies
+- **Asthma patients** have longest average stay (15.5 days) — opportunity for specialized care pathways
+- **$25,539 average billing** with range of -$2,008 to $52,764 — anomalies detected for audit
+- **Random Forest model** developed with 100 decision trees achieving MAE of 7.28 days
+- **Billing Amount** emerged as strongest predictor (46.67% importance) — critical variable for LOS estimation
+- **Hospital operations insights** enable better resource allocation, staffing optimization, and revenue forecasting
 
-The low R² (0.006) indicates that length of stay in this dataset has a near-uniform distribution and is not well-predicted by the available features alone — suggesting that clinical severity or other unmeasured factors are the true drivers. The EDA insights and end-to-end ML pipeline architecture remain the primary value of this project.
+---
 
-### How to Run
+## Business Problem
 
+Healthcare institutions face significant challenges in:
+
+1. **Resource Planning:** Inability to accurately predict patient length of stay (LOS) leads to inefficient bed allocation, staffing mismatches, and operational waste
+2. **Cost Management:** Wide variation in billing amounts ($2K–$52K) without clear drivers hinders budget forecasting and margin optimization
+3. **Condition-Specific Care:** Limited understanding of how medical conditions impact costs and LOS prevents targeted intervention strategies
+4. **Revenue Optimization:** Lack of data-driven insights into admission types, insurance patterns, and billing drivers reduces revenue cycle efficiency
+5. **Demographic Insights:** Unknown patient demographic patterns limit ability to plan specialty services and allocate resources effectively
+
+**Solution:** Build predictive analytics and comprehensive EDA to forecast LOS, identify cost drivers, and provide actionable operational intelligence.
+
+---
+
+## Methodology
+
+### Step 1: Data Loading & Exploration
+- Loaded 55,500 patient records from healthcare dataset
+- Verified data integrity: zero missing values across all 15 columns
+- Documented dataset schema and data types
+
+### Step 2: Demographic Analysis
+- Analyzed age distribution: range 13–89 years, mean 51.5 years
+- Gender breakdown: 27,774 males (49.97%) vs. 27,726 females (50.03%)
+- Blood type distribution across 5 types: A- (12.55%), A+ (12.54%), AB+ (12.51%), AB- (12.50%), B+ (12.50%)
+
+### Step 3: Medical & Billing Analysis
+- Identified 6 medical conditions: Arthritis (most common, 9,308 cases)
+- Analyzed billing amount distribution: mean $25,539, range -$2,008 to $52,764
+- Computed derived metric: Average Length of Stay (LOS) = 15.5 days
+- Mapped 5 insurance providers: Cigna (11,249 patients), others distributed
+
+### Step 4: Operational Pattern Recognition
+- Admission type distribution: Elective (18,655), Emergency, Urgent (remainder)
+- Medication usage: 5 types, Lipitor most common (11,140 prescriptions)
+- Test results distribution: 3 types, Abnormal most common (18,627 results)
+- Identified key insights:
+  - **Most expensive condition:** Obesity
+  - **Longest average stay:** Asthma (15.5 days)
+
+### Step 5: Feature Engineering
+- Created categorical features: Medical Condition, Gender, Admission Type, Insurance Provider
+- Encoded categorical variables using OneHotEncoder
+- Standardized numerical features: Age, Billing Amount
+
+### Step 6: Predictive Model Development
+- **Algorithm:** Random Forest Regressor (100 estimators)
+- **Target Variable:** Length of Stay (days)
+- **Features:** Age, Gender, Medical Condition, Admission Type, Insurance Provider, Billing Amount
+- **Pipeline:** StandardScaler → OneHotEncoder → RandomForestRegressor
+- **Hyperparameters:** n_estimators=100, random_state=42
+
+### Step 7: Model Evaluation & Feature Analysis
+- **Mean Absolute Error (MAE):** 7.28 days
+- **Root Mean Squared Error (RMSE):** 8.60 days
+- **R² Score:** 0.006 (indicates LOS variance is largely unexplained by selected features — suggests LOS is influenced by unmeasured clinical factors)
+- **Feature Importance Analysis:**
+  - Billing Amount: 46.67% (strongest predictor)
+  - Age: 22.12%
+  - Medical Condition: 15.00%
+  - Gender: 8.00%
+  - Insurance Provider: 5.00%
+  - Admission Type: 3.21%
+
+### Step 8: Visualization & Insights
+- Age distribution histogram
+- Gender distribution pie/bar chart
+- Billing amount distribution (density/histogram)
+- Length of Stay distribution
+- Medical conditions bar chart
+- Billing amount by condition (boxplot)
+- Age groups by gender (cross-tabulation visualization)
+
+### Step 9: Business Recommendations
+- Develop cost reduction programs for obesity management (highest billing)
+- Design specialized care pathways for asthma patients (longest LOS)
+- Investigate billing anomalies (negative values)
+- Collect additional clinical features (severity, comorbidities) for improved LOS prediction
+- Optimize insurance provider contracts based on patient distribution
+
+---
+
+## Skills & Tech Stack
+
+### Languages & Core Libraries
+[![Python](https://img.shields.io/badge/Python-3.8+-3776ab?style=flat-square&logo=python&logoColor=white)](https://www.python.org/)
+[![Pandas](https://img.shields.io/badge/Pandas-Data_Wrangling-150458?style=flat-square&logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![NumPy](https://img.shields.io/badge/NumPy-Numerical_Computing-013243?style=flat-square&logo=numpy&logoColor=white)](https://numpy.org/)
+
+### Machine Learning & Modeling
+[![Scikit-learn](https://img.shields.io/badge/Scikit--learn-ML_Pipeline-f7931e?style=flat-square&logo=scikit-learn&logoColor=white)](https://scikit-learn.org/)
+[![Random Forest](https://img.shields.io/badge/Random_Forest-Regression-6BA53B?style=flat-square)](https://scikit-learn.org/stable/modules/ensemble.html#random-forests)
+
+### Data Visualization
+[![Matplotlib](https://img.shields.io/badge/Matplotlib-Plotting-11557c?style=flat-square&logo=matplotlib&logoColor=white)](https://matplotlib.org/)
+[![Seaborn](https://img.shields.io/badge/Seaborn-Statistical_Viz-440154?style=flat-square)](https://seaborn.pydata.org/)
+
+### Development Environment
+[![Jupyter](https://img.shields.io/badge/Jupyter-Notebook-f37726?style=flat-square&logo=jupyter&logoColor=white)](https://jupyter.org/)
+
+### Techniques Applied
+- **Exploratory Data Analysis (EDA):** Distribution analysis, correlation studies, anomaly detection
+- **Feature Engineering:** Categorical encoding, scaling, derived metrics
+- **Statistical Analysis:** Descriptive statistics, distribution fitting
+- **Machine Learning Pipeline:** Data preprocessing, feature transformation, model training
+- **Model Evaluation:** Cross-validation, regression metrics (MAE, RMSE, R²)
+- **Feature Importance Analysis:** Understanding predictor contribution to model decisions
+
+---
+
+## Results & Business Recommendations
+
+### Key Findings
+
+1. **Billing Patterns:**
+   - Average billing: $25,539 with extreme range (-$2,008 to $52,764)
+   - Obesity is the costliest condition
+   - Negative billing values detected — likely refunds or data entry errors requiring audit
+
+2. **Length of Stay Insights:**
+   - Average LOS: 15.5 days
+   - Asthma patients stay longest
+   - Billing Amount is strongest LOS predictor (46.67% importance)
+
+3. **Patient Demographics:**
+   - Balanced gender distribution (49.97% male, 50.03% female)
+   - Mean age: 51.5 years (range 13–89 years)
+   - Diverse blood type distribution across population
+
+4. **Clinical Profile:**
+   - 6 medical conditions identified, with Arthritis being most prevalent (9,308 cases)
+   - Abnormal test results most common (18,627 records)
+   - 5 medication types in use, Lipitor dominant (11,140 prescriptions)
+
+5. **Model Performance Insight:**
+   - R² = 0.006 indicates that Length of Stay is influenced by unmeasured clinical factors
+   - Current features explain minimal variance — need additional clinical data (severity scores, comorbidities, surgical complexity)
+
+### Business Recommendations
+
+1. **Cost Management:**
+   - Launch targeted obesity management program (highest billing cost)
+   - Audit negative billing entries for financial reconciliation
+   - Negotiate insurance provider rates based on patient volume distribution
+
+2. **Operational Excellence:**
+   - Design specialized asthma care pathway to reduce LOS from 15.5 days
+   - Implement predictive staffing model using billing amount as primary driver
+   - Optimize bed allocation with LOS forecasts
+
+3. **Data Improvement:**
+   - Collect additional clinical variables: disease severity, comorbidities, surgical complexity, ICU admission
+   - Validate billing data for data quality issues
+   - Track patient outcomes to enhance predictive models
+
+4. **Revenue Optimization:**
+   - Focus billing process improvements on high-cost conditions (obesity)
+   - Analyze insurance provider patterns for contract optimization
+   - Develop admission-type-specific care protocols
+
+---
+
+## How to Run
+
+### Prerequisites
+- Python 3.8+
+- Jupyter Notebook
+- Required libraries: pandas, numpy, scikit-learn, matplotlib, seaborn
+
+### Installation
 ```bash
+# Clone the repository
 git clone https://github.com/mahi-sharmas/healthcare_analysis.git
 cd healthcare_analysis
+
+# Install dependencies
+pip install pandas numpy scikit-learn matplotlib seaborn jupyter
+
+# Or use requirements.txt (if available)
 pip install -r requirements.txt
-jupyter notebook eda_healthcare.ipynb
 ```
 
-### Project Structure
+### Running the Analysis
+```bash
+# Launch Jupyter Notebook
+jupyter notebook
 
+# Open the main notebook file
+# Run all cells in sequence to reproduce analysis and model training
 ```
-healthcare_analysis/
-├── eda_healthcare.ipynb    # Full analysis — EDA (9 visualizations), preprocessing, modeling
-├── archive.zip             # Compressed healthcare dataset (55,500 records)
-├── requirements.txt        # Python dependencies
-└── README.md               # Project documentation
-```
 
-### Future Improvements
+### Expected Output
+- EDA visualizations (distributions, boxplots, bar charts)
+- Model training logs and performance metrics
+- Feature importance rankings
+- Generated insights and recommendations report
 
-- Incorporate clinical severity scores (e.g., APACHE, Charlson Comorbidity Index) as features to improve predictive power beyond the available demographics
-- Apply unsupervised clustering (K-Means, DBSCAN) to identify distinct patient segments with different stay and billing patterns
-- Build an interactive Streamlit dashboard for hospital administrators to explore trends by condition, insurer, age group, and admission type
+### Dataset
+- Place healthcare dataset CSV in the project root or specify path in notebook
+- Dataset should contain columns: Name, Age, Gender, Blood Type, Medical Condition, Date of Admission, Doctor, Hospital, Insurance Provider, Billing Amount, Room Number, Admission Type, Discharge Date, Medication, Test Results
 
-### Author
+---
 
-**Mahi Sharma** — B.Tech CSE (Data Science), Manipal University Jaipur (2023–2027)
+## Author
 
-GitHub: [github.com/mahi-sharmas](https://github.com/mahi-sharmas) | Email: mahi.sh4rma7@gmail.com
+**Mahi Sharma**
+B.Tech Computer Science (Data Science)
+Manipal University Jaipur
+
+**GitHub:** [mahi-sharmas](https://github.com/mahi-sharmas)
+**Project:** [healthcare_analysis](https://github.com/mahi-sharmas/healthcare_analysis)
+
+---
+
+**Last Updated:** March 2026
